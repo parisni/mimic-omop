@@ -23,6 +23,7 @@ INSTALLATION INSTRUCTIONS
 
 - [Manual](./README-run-etl.md)
 - [Docker-compose](./docker/README.md)
+- [Loading the export into Citus](./omop/build-omop/citus/README.md)
 
 OMOP TABLES LOADED
 ==================
@@ -139,5 +140,4 @@ MIMIC TABLES EQUIVALENCE
   - [PROVIDER](etl/StandardizedHealthSystemDataTables/PROVIDER)
 - [callout](https://mimic.physionet.org/mimictables/callout/)
   - [COHORT_ATTRIBUTES](etl/StandardizedDerivedElements/COHORT_ATTRIBUTE)
-
 

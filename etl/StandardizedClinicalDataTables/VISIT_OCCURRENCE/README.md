@@ -22,7 +22,7 @@
 
 - it maps mimic admission type to omop admission type
 
-## [admitting_source_concept_id](https://github.com/MIT-LCP/mimic-omop/blob/master/extras/concept/admission_location_to_concept.csv)
+## [admitted_from_source_concept_id](https://github.com/MIT-LCP/mimic-omop/blob/master/extras/concept/admission_location_to_concept.csv)
 
 - it maps mimic location admission type to omop location admission type
 
@@ -47,7 +47,7 @@ FROM visit_occurrence;
 ``` sql
 SELECT count(distinct visit_occurrence_id) AS dead_hospital_count
 FROM visit_occurrence
-WHERE discharge_to_concept_id = 4216643;                          -- concept.concept_name = 'Patient died'
+WHERE discharged_to_concept_id = 4216643;                          -- concept.concept_name = 'Patient died'
 ```
 | dead_hospital_count |
 |---------------------|
@@ -65,7 +65,7 @@ WITH tmp AS
   (
         SELECT visit_occurrence_id
         FROM visit_occurrence
-        WHERE discharge_to_concept_id = 4216643                   -- concept.concept_name = 'Patient died'
+        WHERE discharged_to_concept_id = 4216643                   -- concept.concept_name = 'Patient died'
   
   ) d USING (visit_occurrence_id)
 
@@ -102,14 +102,14 @@ JOIN concept c ON v.visit_source_concept_id = c.concept_id;
 | URGENT             | Hospital admission, urgent, 48 hours |    4331002|
 | ELECTIVE           | Hospital admission, elective         |    4314435|
 
-## explanation of `admitting_source_concept_id`
+## explanation of `admitted_from_source_concept_id`
 
 ``` sql
-SELECT distinct admitting_source_value, concept_name, admitting_source_concept_id AS concept_id
+SELECT distinct admitted_from_source_value, concept_name, admitted_from_source_concept_id AS concept_id
 FROM visit_occurrence v
-JOIN concept c ON v.admitting_source_concept_id = c.concept_id;
+JOIN concept c ON v.admitted_from_source_concept_id = c.concept_id;
 ```
-|  admitting_source_value   |       concept_name        | concept_id |
+|  admitted_from_source_value   |       concept_name        | concept_id |
 |---------------------------|---------------------------|------------|
 | TRANSFER FROM HOSP/EXTRAM | Inpatient Hospital        |       8717|
 | TRANSFER FROM SKILLED NUR | Skilled Nursing Facility  |       8863|
@@ -121,14 +121,14 @@ JOIN concept c ON v.admitting_source_concept_id = c.concept_id;
 | TRSF WITHIN THIS FACILITY | Inpatient Hospital        |       8717|
 | TRANSFER FROM OTHER HEALT | Other Inpatient Care      |       8892|
 
-## explanation of the `discharge_to_concept_id`
+## explanation of the `discharged_to_concept_id`
 
 ``` sql
-SELECT distinct discharge_to_source_value, concept_name, discharge_to_concept_id  as concept_id
+SELECT distinct discharged_to_source_value, concept_name, discharged_to_concept_id  as concept_id
 FROM visit_occurrence v
-JOIN concept c ON v.discharge_to_concept_id = c.concept_id;
+JOIN concept c ON v.discharged_to_concept_id = c.concept_id;
 ```
-| discharge_to_source_value |                 concept_name                  | concept_id |
+| discharged_to_source_value |                 concept_name                  | concept_id |
 |---------------------------|-----------------------------------------------|------------|
 | HOME HEALTH CARE          | Home                                          |       8536|
 | DISC-TRAN CANCER/CHLDRN H | Inpatient Hospital                            |       8717|

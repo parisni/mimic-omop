@@ -136,24 +136,24 @@ SELECT
 , place_of_service_source_value as care_site_name
 , visit_source_value
 , visit_source_concept_id
-, admitting_concept_id
+, admitted_from_concept_id
 , cpt3.concept_name as admitting_concept_name
 , cpt3.concept_code as admitting_concept_code
 , cpt3.vocabulary_id as admitting_concept_code_system
-, admitting_source_value
-, admitting_source_concept_id
-, discharge_to_concept_id
+, admitted_from_source_value
+, admitted_from_source_concept_id
+, discharged_to_concept_id
 , cpt4.concept_name as discharge_concept_name
 , cpt4.concept_code as discharge_concept_code
 , cpt4.vocabulary_id as discharge_concept_code_system
-, discharge_to_source_value
-, discharge_to_source_concept_id
+, discharged_to_source_value
+, discharged_to_source_concept_id
 , preceding_visit_occurrence_id
 FROM omop.visit_occurrence
 LEFT JOIN omop.concept as cpt1 ON cpt1.concept_id = visit_concept_id
 LEFT JOIN omop.concept as cpt2 ON cpt2.concept_id = visit_type_concept_id
-LEFT JOIN omop.concept as cpt3 ON cpt3.concept_id = admitting_concept_id
-LEFT JOIN omop.concept as cpt4 ON cpt4.concept_id = discharge_to_concept_id
+LEFT JOIN omop.concept as cpt3 ON cpt3.concept_id = admitted_from_concept_id
+LEFT JOIN omop.concept as cpt4 ON cpt4.concept_id = discharged_to_concept_id
 LEFT JOIN omop.care_site as cs USING (care_site_id);
 
 -- VISIT DETAIL
@@ -166,11 +166,11 @@ SELECT
 , cpt1.concept_name as visit_detail_concept_name
 , cpt1.concept_code as visit_detail_concept_code
 , cpt1.vocabulary_id as visit_detail_concept_code_system
-, visit_start_date               
-, visit_start_datetime           
-, visit_end_date                 
-, visit_end_datetime             
-, visit_type_concept_id          
+, visit_detail_start_date               
+, visit_detail_start_datetime           
+, visit_detail_end_date                 
+, visit_detail_end_datetime             
+, visit_detail_type_concept_id          
 , cpt2.concept_name as visit_type_concept_name
 , cpt2.concept_code as visit_type_concept_code
 , cpt2.vocabulary_id as visit_type_concept_code_system
@@ -178,28 +178,28 @@ SELECT
 , care_site_id                   
 , care_site_name as care_site_code
 , place_of_service_source_value as care_site_name
-, visit_source_value             
-, visit_source_concept_id        
-, admitting_concept_id           
+, visit_detail_source_value             
+, visit_detail_source_concept_id        
+, admitted_from_concept_id           
 , cpt3.concept_name as admitting_concept_name
 , cpt3.concept_code as admitting_concept_code
 , cpt3.vocabulary_id as admitting_concept_code_system
-, admitting_source_value         
-, admitting_source_concept_id    
-, discharge_to_concept_id        
+, admitted_from_source_value         
+, admitted_from_source_concept_id    
+, discharged_to_concept_id        
 , cpt4.concept_name as discharge_concept_name
 , cpt4.concept_code as discharge_concept_code
 , cpt4.vocabulary_id as discharge_concept_code_system
-, discharge_to_source_value      
-, discharge_to_source_concept_id 
+, discharged_to_source_value      
+, discharged_to_source_concept_id 
 , preceding_visit_detail_id      
-, visit_detail_parent_id         
+, parent_visit_detail_id         
 , visit_occurrence_id            
 FROM omop.visit_detail
 LEFT JOIN omop.concept as cpt1 ON cpt1.concept_id = visit_detail_concept_id
-LEFT JOIN omop.concept as cpt2 ON cpt2.concept_id = visit_type_concept_id
-LEFT JOIN omop.concept as cpt3 ON cpt3.concept_id = admitting_concept_id
-LEFT JOIN omop.concept as cpt4 ON cpt4.concept_id = discharge_to_concept_id
+LEFT JOIN omop.concept as cpt2 ON cpt2.concept_id = visit_detail_type_concept_id
+LEFT JOIN omop.concept as cpt3 ON cpt3.concept_id = admitted_from_concept_id
+LEFT JOIN omop.concept as cpt4 ON cpt4.concept_id = discharged_to_concept_id
 LEFT JOIN omop.care_site as cs USING (care_site_id)
 
 

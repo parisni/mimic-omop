@@ -19,7 +19,7 @@ SELECT results_eq
 SELECT hadm_id, count(1) as total
 from omop.visit_detail v
 JOIN admissions a ON v.visit_occurrence_id = a.mimic_id
-WHERE v.visit_type_concept_id = 4079617
+WHERE v.visit_detail_type_concept_id = 4079617
 GROUP BY 1
 ORDER BY 2 DESC, 1;
 '
@@ -54,20 +54,20 @@ ORDER BY 2 desc, 1;
 SELECT results_eq
 (
 '
-SELECT count(visit_source_concept_id)
+SELECT count(visit_detail_source_concept_id)
 FROM omop.visit_detail
-GROUP BY visit_source_concept_id
+GROUP BY visit_detail_source_concept_id
 ORDER BY 1 DESC;
 '
 ,
 '
-SELECT count(visit_source_value)
+SELECT count(visit_detail_source_value)
 FROM omop.visit_detail
-GROUP BY visit_source_value
+GROUP BY visit_detail_source_value
 ORDER BY 1 DESC;
 '
 ,
-'VISIT_DETAIL -- test visit_source_value and visit_source_concept_id match'
+'VISIT_DETAIL -- test visit_detail_source_value and visit_detail_source_concept_id match'
 );
 
 
@@ -75,20 +75,20 @@ ORDER BY 1 DESC;
 SELECT results_eq
 (
 '
-SELECT COUNT(admitting_source_concept_id)
+SELECT COUNT(admitted_from_source_concept_id)
 FROM omop.visit_detail
-GROUP BY admitting_source_concept_id
+GROUP BY admitted_from_source_concept_id
 ORDER BY 1 DESC;
 '
 ,
 '
-SELECT COUNT(admitting_source_value)
+SELECT COUNT(admitted_from_source_value)
 FROM omop.visit_detail
-GROUP BY admitting_source_value
+GROUP BY admitted_from_source_value
 ORDER BY 1 DESC;
 '
 ,
-'VISIT_DETAIL -- test admitting_source_concept_id and admitting_source_value match'
+'VISIT_DETAIL -- test admitted_from_source_concept_id and admitted_from_source_value match'
 );
 
 
@@ -100,7 +100,7 @@ SELECT COUNT(distinct person_id)
   , COUNT(distinct visit_occurrence_id)
 FROM omop.visit_detail
 WHERE visit_detail_concept_id = 581382
-AND visit_type_concept_id = 2000000006;
+AND visit_detail_type_concept_id = 2000000006;
 '
 ,
 '
@@ -121,7 +121,7 @@ WITH tmp AS
 (
   SELECT visit_detail_id, visit_occurrence_id
   , CASE
-      WHEN visit_end_datetime < visit_start_datetime
+      WHEN visit_detail_end_datetime < visit_detail_start_datetime
       THEN 1
     ELSE 0 END AS abnormal
   FROM omop.visit_detail
@@ -145,7 +145,7 @@ WITH tmp AS
 (
   SELECT visit_detail_id, visit_occurrence_id
     , CASE
-        WHEN visit_end_date < visit_start_date
+        WHEN visit_detail_end_date < visit_detail_start_date
         THEN 1
         ELSE 0
       END AS abnormal

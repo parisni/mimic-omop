@@ -11,16 +11,16 @@ WITH
                                 , dischtime as visit_end_datetime
                                 , 44818518 as visit_type_concept_id
                                 , admission_type as visit_source_value
-                                , admission_location as admitting_source_value
-                                , discharge_location as discharge_to_source_value
+                                , admission_location as admitted_from_source_value
+                                , discharge_location as discharged_to_source_value
 				, diagnosis
                                 , LAG(mimic_id) OVER ( PARTITION BY subject_id ORDER BY admittime ASC) as preceding_visit_occurrence_id
              FROM admissions_emerged
                   ),
 "patients" AS (SELECT subject_id, mimic_id as person_id FROM patients),
 "gcpt_admission_type_to_concept" AS (SELECT mimic_id as visit_source_concept_id, admission_type as visit_source_value, visit_concept_id FROM gcpt_admission_type_to_concept),
-"gcpt_admission_location_to_concept" AS (SELECT concept_id as admitting_concept_id, mimic_id as admitting_source_concept_id, admission_location FROM gcpt_admission_location_to_concept),
-"gcpt_discharge_location_to_concept" AS (SELECT concept_id as discharge_to_concept_id, mimic_id as discharge_to_source_concept_id, discharge_location FROM gcpt_discharge_location_to_concept),
+"gcpt_admission_location_to_concept" AS (SELECT concept_id as admitted_from_concept_id, mimic_id as admitted_from_source_concept_id, admission_location FROM gcpt_admission_location_to_concept),
+"gcpt_discharge_location_to_concept" AS (SELECT concept_id as discharged_to_concept_id, mimic_id as discharged_to_source_concept_id, discharge_location FROM gcpt_discharge_location_to_concept),
 "care_site" as (select care_site_id from :OMOP_SCHEMA.care_site where care_site_name = 'BIDMC') -- Beth Israel hospital for all
  INSERT INTO :OMOP_SCHEMA.VISIT_OCCURRENCE
  (
@@ -36,12 +36,12 @@ WITH
     , care_site_id
     , visit_source_value
     , visit_source_concept_id
-    , admitting_concept_id --
-    , admitting_source_value
-    , admitting_source_concept_id
-    , discharge_to_concept_id --
-    , discharge_to_source_value
-    , discharge_to_source_concept_id
+    , admitted_from_concept_id --
+    , admitted_from_source_value
+    , admitted_from_source_concept_id
+    , discharged_to_concept_id --
+    , discharged_to_source_value
+    , discharged_to_source_concept_id
     , preceding_visit_occurrence_id
  )
  SELECT
@@ -58,15 +58,15 @@ WITH
  , gcpt_admission_type_to_concept.visit_source_value
  , gcpt_admission_type_to_concept.visit_source_concept_id
  , CASE WHEN diagnosis ~* 'organ donor' THEN  4216643 -- DEAD/EXPIRED
-        ELSE gcpt_admission_location_to_concept.admitting_concept_id END AS admitting_concept_id --
+        ELSE gcpt_admission_location_to_concept.admitted_from_concept_id END AS admitted_from_concept_id --
  , CASE WHEN diagnosis ~* 'organ donor' THEN 'DEAD/EXPIRED'
-        ELSE gcpt_admission_location_to_concept.admission_location END AS admitting_source_value
- , gcpt_admission_location_to_concept.admitting_source_concept_id
+        ELSE gcpt_admission_location_to_concept.admission_location END AS admitted_from_source_value
+ , gcpt_admission_location_to_concept.admitted_from_source_concept_id
  , CASE WHEN diagnosis ~* 'organ donor' THEN 4022058 --ORGAN DONOR
-        ELSE gcpt_discharge_location_to_concept.discharge_to_concept_id END AS discharge_to_concept_id --
+        ELSE gcpt_discharge_location_to_concept.discharged_to_concept_id END AS discharged_to_concept_id --
  ,CASE WHEN diagnosis ~* 'organ donor' THEN diagnosis
-       ELSE gcpt_discharge_location_to_concept.discharge_location END AS  discharge_to_source_value
- , gcpt_discharge_location_to_concept.discharge_to_source_concept_id
+       ELSE gcpt_discharge_location_to_concept.discharge_location END AS  discharged_to_source_value
+ , gcpt_discharge_location_to_concept.discharged_to_source_concept_id
  , admissions.preceding_visit_occurrence_id
    FROM admissions
  LEFT JOIN gcpt_admission_location_to_concept USING (admission_location)

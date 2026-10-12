@@ -8,7 +8,7 @@
 
 - the room or bed movement have been removed so that only ward change are logged in the table
 - the emergency stays have been added in has conventional stays (may introduce strange gap in times)
-- `visit_type_concept_id` is equal to 2000000006  (Ward and physical location) and localize the patient
+- `visit_detail_type_concept_id` is equal to 2000000006  (Ward and physical location) and localize the patient
 - `visit_detail_concept_id` is equal to 9201 (Inpatient visit) for a non emergency stay
 - `visit_detail_concept_id` is equal to 9203 (Emergency room) for a emergency  stay
 - `visit_detail_concept_id` is equal to 32037  (Intensive Care Unit) for an ICU  stay
@@ -17,7 +17,7 @@
 ## [services](https://mimic.physionet.org/mimictables/services/)
 
 - the services table populates the `visit_detail` too
-- `visit_type_concept_id` is equal to  45770670 (Services and care) and lists services that a patient was admitted/transferred under
+- `visit_detail_type_concept_id` is equal to  45770670 (Services and care) and lists services that a patient was admitted/transferred under
 - `visit_detail_concept_id` is equal to 45763735 to identify medical patients
 - `visit_detail_concept_id` is equal to 4149152 to identify surgical patients
 - `visit_detail_concept_id` is equal to 4237225 to identify newborn patients
@@ -39,11 +39,11 @@
 
 # Mapping used
 
-## [visit_source_concept_id](https://github.com/MIT-LCP/mimic-omop/blob/master/extras/concept/admission_type_to_concept.csv)
+## [visit_detail_source_concept_id](https://github.com/MIT-LCP/mimic-omop/blob/master/extras/concept/admission_type_to_concept.csv)
 
 - it maps mimic admission type to omop admission type
 
-## [admitting_source_concept_id](https://github.com/MIT-LCP/mimic-omop/blob/master/extras/concept/admission_location_to_concept.csv)
+## [admitted_from_source_concept_id](https://github.com/MIT-LCP/mimic-omop/blob/master/extras/concept/admission_location_to_concept.csv)
 
 - it maps mimic location admission type to omop location admission type
 
@@ -53,12 +53,12 @@
 
 # Example
 
-## explanation of `visit_type_concept_id`
+## explanation of `visit_detail_type_concept_id`
 
 ``` sql
-SELECT distinct concept_name, visit_type_concept_id  as concept_id
+SELECT distinct concept_name, visit_detail_type_concept_id  as concept_id
 FROM visit_detail v
-JOIN concept c ON v.visit_type_concept_id = c.concept_id;
+JOIN concept c ON v.visit_detail_type_concept_id = c.concept_id;
 ```
 |        concept_name        | concept_id |
 |----------------------------|------------|
@@ -71,7 +71,7 @@ JOIN concept c ON v.visit_type_concept_id = c.concept_id;
 SELECT concept_name, concept_id, count(1)
 FROM visit_detail
 JOIN concept ON visit_detail_concept_id = concept_id
-WHERE visit_type_concept_id = 45770670                          -- concept.concept_name = 'Services and care'
+WHERE visit_detail_type_concept_id = 45770670                          -- concept.concept_name = 'Services and care'
 GROUP BY 1, 2 ORDER BY count(1) desc;
 ```
 |      concept_name       | concept_id | count |
@@ -87,7 +87,7 @@ GROUP BY 1, 2 ORDER BY count(1) desc;
 SELECT concept_name, concept_id, count(1)
 FROM visit_detail
 JOIN concept ON visit_detail_concept_id = concept_id
-WHERE visit_type_concept_id = 2000000006                      -- concept.concept_name = 'Ward and physical location'
+WHERE visit_detail_type_concept_id = 2000000006                      -- concept.concept_name = 'Ward and physical location'
 GROUP BY 1, 2 ORDER BY count(1) desc;
 ```
 |             concept_name              | concept_id | count |
@@ -103,7 +103,7 @@ GROUP BY 1, 2 ORDER BY count(1) desc;
 -- transfers table (mimic)
 SELECT place_of_service_source_value, count (1)
 FROM visit_detail JOIN care_site c USING (care_site_id)
-WHERE visit_type_concept_id = 2000000006                        -- concept.concept_name = 'Ward and physical location'
+WHERE visit_detail_type_concept_id = 2000000006                        -- concept.concept_name = 'Ward and physical location'
 GROUP BY 1 ORDER BY count(1) DESC;
 ```
 |     place_of_service_source_value     | count |
@@ -123,7 +123,7 @@ GROUP BY 1 ORDER BY count(1) DESC;
 ``` sql
 SELECT place_of_service_source_value, count (1)
 FROM visit_detail JOIN care_site c USING (care_site_id)
-WHERE visit_type_concept_id = 45770670                           -- concept.concept_name = 'Services and care'
+WHERE visit_detail_type_concept_id = 45770670                           -- concept.concept_name = 'Services and care'
 GROUP BY 1 ORDER BY count(1) DESC;
 ```
 |                               place_of_service_source_value                               | count |
@@ -155,7 +155,7 @@ GROUP BY 1 ORDER BY count(1) DESC;
 SELECT COUNT(distinct visit_detail_id) AS num_totalstays_count
 FROM visit_detail
 WHERE visit_detail_concept_id = 32037                             -- concept.concept_name = 'Intensive Care'
-AND visit_type_concept_id = 2000000006;                            -- concept.concept_name = 'Ward and physical location'
+AND visit_detail_type_concept_id = 2000000006;                            -- concept.concept_name = 'Ward and physical location'
 ```
 | num_totalstays_count |
 |----------------------|
@@ -169,8 +169,8 @@ SELECT count(distinct visit_detail_id) AS dead_hospital_count
 FROM visit_detail
 JOIN concept ON visit_detail_concept_id = concept_id
 WHERE visit_detail_concept_id = 32037                             -- concept.concept_name = 'Intensive Care'
-AND visit_type_concept_id = 2000000006                             -- concept.concept_name = 'Ward and physical location'
-AND discharge_to_concept_id = 4216643;                             -- concept.concept_name = 'Patient died'
+AND visit_detail_type_concept_id = 2000000006                             -- concept.concept_name = 'Ward and physical location'
+AND discharged_to_concept_id = 4216643;                             -- concept.concept_name = 'Patient died'
 ```
 | dead_hospital_count |
 |---------------------|
@@ -189,11 +189,11 @@ WITH tmp AS
         SELECT visit_detail_id
         FROM visit_detail
 	WHERE visit_detail_concept_id = 32037                             -- concept.concept_name = 'Intensive Care'
-	AND visit_type_concept_id = 2000000006                    -- concept.concept_name = 'Ward and physical location'
-	AND discharge_to_concept_id = 4216643                     -- concept.concept_name = 'Patient died'
+	AND visit_detail_type_concept_id = 2000000006                    -- concept.concept_name = 'Ward and physical location'
+	AND discharged_to_concept_id = 4216643                     -- concept.concept_name = 'Patient died'
   ) d USING (visit_detail_id)
   WHERE t.visit_detail_concept_id = 32037
-  AND t.visit_type_concept_id = 2000000006
+  AND t.visit_detail_type_concept_id = 2000000006
 
 )
 SELECT dead, total, dead * 100 / total as percentage FROM tmp;
@@ -208,10 +208,10 @@ SELECT dead, total, dead * 100 / total as percentage FROM tmp;
 SELECT percentile_25
        , median
        , percentile_75
-       , MIN( EXTRACT(EPOCH FROM visit_end_datetime  - visit_start_datetime)/60.0/60.0/24.0    )    AS minimum
-       , MAX( EXTRACT(EPOCH FROM visit_end_datetime  - visit_start_datetime)/60.0/60.0/24.0  )    AS maximum
-       , CAST(AVG(  EXTRACT(EPOCH FROM visit_end_datetime  - visit_start_datetime)/60.0/60.0/24.0  ) AS INTEGER)   AS mean
-       , STDDEV( EXTRACT(EPOCH FROM visit_end_datetime  - visit_start_datetime)/60.0/60.0/24.0    ) AS stddev
+       , MIN( EXTRACT(EPOCH FROM visit_detail_end_datetime  - visit_detail_start_datetime)/60.0/60.0/24.0    )    AS minimum
+       , MAX( EXTRACT(EPOCH FROM visit_detail_end_datetime  - visit_detail_start_datetime)/60.0/60.0/24.0  )    AS maximum
+       , CAST(AVG(  EXTRACT(EPOCH FROM visit_detail_end_datetime  - visit_detail_start_datetime)/60.0/60.0/24.0  ) AS INTEGER)   AS mean
+       , STDDEV( EXTRACT(EPOCH FROM visit_detail_end_datetime  - visit_detail_start_datetime)/60.0/60.0/24.0    ) AS stddev
   FROM
   (SELECT MAX( CASE WHEN( percentile = 1    ) THEN los END    ) AS percentile_25
         , MAX( CASE WHEN( percentile = 2    ) THEN los END    ) AS median
@@ -225,17 +225,17 @@ SELECT percentile_25
                         ) + 1
           as percentile
           FROM
-             ( SELECT EXTRACT(EPOCH FROM visit_end_datetime  - visit_start_datetime)/60.0/60.0/24.0 as los, count(*) AS nb_los
+             ( SELECT EXTRACT(EPOCH FROM visit_detail_end_datetime  - visit_detail_start_datetime)/60.0/60.0/24.0 as los, count(*) AS nb_los
                 FROM visit_detail
 		WHERE visit_detail_concept_id = 32037                             -- concept.concept_name = 'Intensive Care'
-                AND visit_type_concept_id = 2000000006            -- concept.concept_name = 'Ward and physical location' 
-                GROUP BY EXTRACT(EPOCH FROM visit_end_datetime - visit_start_datetime)/60.0/60.0/24.0
+                AND visit_detail_type_concept_id = 2000000006            -- concept.concept_name = 'Ward and physical location' 
+                GROUP BY EXTRACT(EPOCH FROM visit_detail_end_datetime - visit_detail_start_datetime)/60.0/60.0/24.0
                ) as counter
          ) as p
      WHERE percentile <= 3
   ) as percentile_table, visit_detail
   WHERE visit_detail_concept_id = 32037                             -- concept.concept_name = 'Intensive Care'
-  AND visit_type_concept_id = 2000000006                          -- concept.concept_name = 'Ward and physical location' 
+  AND visit_detail_type_concept_id = 2000000006                          -- concept.concept_name = 'Ward and physical location' 
   GROUP BY percentile_25, median, percentile_75;
 ```
 |   percentile_25   |     median      |  percentile_75   |       minimum        |     maximum      | mean |      stddev      |

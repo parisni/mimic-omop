@@ -9,7 +9,7 @@
 drop schema if exists omop cascade;
 create schema omop;
 set search_path to omop;
-\i 'omop_cdm_ddl.sql'
+\i 'OMOPCDM_postgresql_5.4_ddl.sql'
 \i 'mimic-omop-alter.sql'
 
 \copy omop.provider FROM PROGRAM 'gzip -dc provider.csv.gz' CSV HEADER NULL '' QUOTE '"';
@@ -25,6 +25,8 @@ set search_path to omop;
 \copy omop.fact_relationship FROM PROGRAM 'gzip -dc fact_relationship.csv.gz' CSV HEADER NULL '' QUOTE '"';
 \copy omop.location FROM PROGRAM 'gzip -dc location.csv.gz' CSV HEADER NULL '' QUOTE '"';
 \copy omop.condition_era FROM PROGRAM 'gzip -dc condition_era.csv.gz' CSV HEADER NULL '' QUOTE '"';
+\copy omop.episode FROM PROGRAM 'gzip -dc episode.csv.gz' CSV HEADER NULL '' QUOTE '"';
+\copy omop.episode_event FROM PROGRAM 'gzip -dc episode_event.csv.gz' CSV HEADER NULL '' QUOTE '"';
 \copy omop.cohort_attribute FROM PROGRAM 'gzip -dc cohort_attribute.csv.gz' CSV HEADER NULL '' QUOTE '"';
 \copy omop.care_site FROM PROGRAM 'gzip -dc care_site.csv.gz' CSV HEADER NULL '' QUOTE '"';
 \copy omop.person FROM PROGRAM 'gzip -dc person.csv.gz' CSV HEADER NULL '' QUOTE '"';

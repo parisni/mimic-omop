@@ -107,10 +107,13 @@ folder.
 ```
 root
 ├── etl
-│   ├── Result
-│   │   ├── OMOP CDM indexes required - PostgreSQL.sql
-│   │   ├── OMOP CDM postgresql ddl.txt
-│   │   ├── README.md
+│   ├── Result
+│   │   ├── OMOPCDM_postgresql_5.4_constraints.sql
+│   │   ├── OMOPCDM_postgresql_5.4_ddl.sql
+│   │   ├── OMOPCDM_postgresql_5.4_indices_clinical.sql
+│   │   ├── OMOPCDM_postgresql_5.4_indices_vocabulary.sql
+│   │   ├── OMOPCDM_postgresql_5.4_primary_keys.sql
+│   │   ├── README.md
 │   │   ├── analyze.sql
 │   │   ├── attribute_definition.csv.gz
 │   │   ├── care_site.csv.gz
@@ -132,16 +135,17 @@ root
 │   │   ├── dose_era.csv.gz
 │   │   ├── drug_era.csv.gz
 │   │   ├── drug_exposure.csv.gz
-│   │   ├── drug_strength.csv.gz
-│   │   ├── fact_relationship.csv.gz
+│   │   ├── drug_strength.csv.gz
+│   │   ├── episode.csv.gz
+│   │   ├── episode_event.csv.gz
+│   │   ├── fact_relationship.csv.gz
 │   │   ├── import_mimic_omop.sql
 │   │   ├── location.csv.gz
 │   │   ├── measurement.csv.gz
 │   │   ├── mimic-omop-alter.sql
 │   │   ├── mimic-omop-disable-trigger.sql
-│   │   ├── mimic-omop-enable-trigger.sql
-│   │   ├── mimic-omop-primary.sql
-│   │   ├── note.csv.gz
+│   │   ├── mimic-omop-enable-trigger.sql
+│   │   ├── note.csv.gz
 │   │   ├── note_nlp.csv.gz
 │   │   ├── observation.csv.gz
 │   │   ├── observation_period.csv.gz

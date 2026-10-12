@@ -39,6 +39,8 @@
  \copy (SELECT * FROM omop.concept_class) TO PROGRAM 'gzip > etl/Result/concept_class.csv.gz' CSV HEADER QUOTE '"';
  \copy (SELECT * FROM omop.drug_era) TO PROGRAM 'gzip > etl/Result/drug_era.csv.gz' CSV HEADER QUOTE '"';
  \copy (SELECT * FROM omop.condition_era) TO PROGRAM 'gzip > etl/Result/condition_era.csv.gz' CSV HEADER QUOTE '"';
+ \copy (SELECT * FROM omop.episode) TO PROGRAM 'gzip > etl/Result/episode.csv.gz' CSV HEADER QUOTE '"';
+ \copy (SELECT * FROM omop.episode_event) TO PROGRAM 'gzip > etl/Result/episode_event.csv.gz' CSV HEADER QUOTE '"';
  \copy (SELECT * FROM omop.cost) TO PROGRAM 'gzip > etl/Result/cost.csv.gz' CSV HEADER QUOTE '"';
  \copy (SELECT * FROM omop.device_exposure) TO PROGRAM 'gzip > etl/Result/device_exposure.csv.gz' CSV HEADER QUOTE '"';
  \copy (SELECT * FROM omop.measurement) TO PROGRAM 'gzip > etl/Result/measurement.csv.gz' CSV HEADER QUOTE '"';

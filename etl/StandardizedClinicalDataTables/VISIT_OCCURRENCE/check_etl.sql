@@ -36,8 +36,8 @@ OR diagnosis ILIKE ''%organ donor%'';
 '
 SELECT count(distinct visit_occurrence_id)
 FROM omop.visit_occurrence
-WHERE discharge_to_concept_id = 4216643
-OR discharge_to_concept_id = 4022058;
+WHERE discharged_to_concept_id = 4216643
+OR discharged_to_concept_id = 4022058;
 '
 , 'number of hospital admissions who die in-hospital match'
 );
@@ -63,7 +63,7 @@ SELECT
   CAST(
     CASE WHEN diagnosis ~* ''organ donor'' THEN ''DEAD/EXPIRED''
     ELSE admission_location END
-  AS TEXT) as admitting_source_value
+  AS TEXT) as admitted_from_source_value
   , count(1)
   FROM admissions
   GROUP BY 1
@@ -72,8 +72,8 @@ SELECT
 ,
 '
 SELECT
-  CAST(admitting_source_value
-    AS TEXT) as admitting_source_value
+  CAST(admitted_from_source_value
+    AS TEXT) as admitted_from_source_value
   , count(1)
   FROM omop.visit_occurrence
   GROUP BY 1
@@ -91,7 +91,7 @@ SELECT
   CAST(
     CASE WHEN diagnosis ~* ''organ donor'' THEN diagnosis
     ELSE discharge_location END
-  AS TEXT) as discharge_to_source_value
+  AS TEXT) as discharged_to_source_value
   , count(1)
   FROM admissions
   GROUP BY 1
@@ -101,15 +101,15 @@ SELECT
 '
 SELECT
   CAST(
-    discharge_to_source_value
-  AS TEXT) as discharge_to_source_value
+    discharged_to_source_value
+  AS TEXT) as discharged_to_source_value
 , count(1)
 FROM omop.visit_occurrence
 GROUP BY 1
 ORDER BY 2,1 DESC;
 '
 ,
-'Visit_occurrence table -- repartition discharge_to_source_value'
+'Visit_occurrence table -- repartition discharged_to_source_value'
 );
 
 

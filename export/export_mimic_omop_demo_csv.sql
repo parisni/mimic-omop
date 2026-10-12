@@ -26,6 +26,8 @@
 \copy (SELECT * FROM cohort_attribute) TO 'cohort_attribute.csv' CSV HEADER QUOTE '"';
 \copy (SELECT * FROM drug_era) TO 'drug_era.csv' CSV HEADER QUOTE '"';
 \copy (SELECT * FROM condition_era) TO 'condition_era.csv' CSV HEADER QUOTE '"';
+\copy (SELECT * FROM episode) TO 'episode.csv' CSV HEADER QUOTE '"';
+\copy (SELECT * FROM episode_event) TO 'episode_event.csv' CSV HEADER QUOTE '"';
 \copy (SELECT * FROM cost) TO 'cost.csv' CSV HEADER QUOTE '"';
 \copy (SELECT * FROM device_exposure) TO 'device_exposure.csv' CSV HEADER QUOTE '"';
 \copy (SELECT * FROM measurement) TO 'measurement.csv' CSV HEADER QUOTE '"';

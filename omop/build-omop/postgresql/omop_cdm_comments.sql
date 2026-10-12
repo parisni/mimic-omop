@@ -15,10 +15,10 @@ COMMENT ON COLUMN visit_occurrence.provider_id IS 'A foreign key to the provider
 COMMENT ON COLUMN visit_occurrence.care_site_id IS 'A foreign key to the care site in the care site table that was visited.';
 COMMENT ON COLUMN visit_occurrence.visit_source_value IS 'The source code for the visit as it appears in the source data.';
 COMMENT ON COLUMN visit_occurrence.visit_source_concept_id IS 'A foreign key to a Concept that refers to the code used in the source.';
-COMMENT ON COLUMN visit_occurrence.admitting_concept_id IS 'A foreign key to the predefined concept in the Place of Service Vocabulary reflecting the admitting source for a visit.';
-COMMENT ON COLUMN visit_occurrence.admitting_source_value  IS 'The source code for the admitting source as it appears in the source data.';
-COMMENT ON COLUMN visit_occurrence.discharge_to_concept_id IS 'A foreign key to the predefined concept in the Place of Service Vocabulary reflecting the discharge disposition for a visit.';
-COMMENT ON COLUMN visit_occurrence.discharge_to_source_value IS 'The source code for the discharge disposition as it appears in the source data.';
+COMMENT ON COLUMN visit_occurrence.admitted_from_concept_id IS 'A foreign key to the predefined concept in the Place of Service Vocabulary reflecting the admitting source for a visit.';
+COMMENT ON COLUMN visit_occurrence.admitted_from_source_value  IS 'The source code for the admitting source as it appears in the source data.';
+COMMENT ON COLUMN visit_occurrence.discharged_to_concept_id IS 'A foreign key to the predefined concept in the Place of Service Vocabulary reflecting the discharge disposition for a visit.';
+COMMENT ON COLUMN visit_occurrence.discharged_to_source_value IS 'The source code for the discharge disposition as it appears in the source data.';
 COMMENT ON COLUMN visit_occurrence.preceding_visit_occurrence_id  IS 'A foreign key to the VISIT_OCCURRENCE table of the visit immediately preceding this visit';
 -- CONDITION_OCCURRENCE
 COMMENT ON TABLE condition_occurrence IS '[CLINICAL] Conditions are records of a Person suggesting the presence of a disease or medical condition stated as a diagnosis, a sign or a symptom, which is either observed by a Provider or reported by the patient. Conditions are recorded in different sources and levels of standardization, for example:';
@@ -137,21 +137,21 @@ COMMENT ON TABLE VISIT_DETAIL IS '[CLINICAL] The VISIT_DETAIL table is an option
 COMMENT ON COLUMN VISIT_DETAIL.visit_detail_id IS 'A unique identifier for each Person''s visit or encounter at a healthcare provider.';
 COMMENT ON COLUMN VISIT_DETAIL.person_id IS 'A foreign key identifier to the Person for whom the visit is recorded. The demographic details of that Person are stored in the PERSON table.';
 COMMENT ON COLUMN VISIT_DETAIL.visit_detail_concept_id IS 'A foreign key that refers to a visit Concept identifier in the Standardized Vocabularies.';
-COMMENT ON COLUMN VISIT_DETAIL.visit_start_date IS 'The start date of the visit.';
-COMMENT ON COLUMN VISIT_DETAIL.visit_start_datetime IS 'The date and time of the visit started.';
-COMMENT ON COLUMN VISIT_DETAIL.visit_end_date IS 'The end date of the visit. If this is a one-day visit the end date should match the start date.';
-COMMENT ON COLUMN VISIT_DETAIL.visit_end_datetime IS 'The date and time of the visit end.';
-COMMENT ON COLUMN VISIT_DETAIL.visit_type_concept_id IS 'A foreign key to the predefined Concept identifier in the Standardized Vocabularies reflecting the type of source data from which the visit record is derived.';
+COMMENT ON COLUMN VISIT_DETAIL.visit_detail_start_date IS 'The start date of the visit.';
+COMMENT ON COLUMN VISIT_DETAIL.visit_detail_start_datetime IS 'The date and time of the visit started.';
+COMMENT ON COLUMN VISIT_DETAIL.visit_detail_end_date IS 'The end date of the visit. If this is a one-day visit the end date should match the start date.';
+COMMENT ON COLUMN VISIT_DETAIL.visit_detail_end_datetime IS 'The date and time of the visit end.';
+COMMENT ON COLUMN VISIT_DETAIL.visit_detail_type_concept_id IS 'A foreign key to the predefined Concept identifier in the Standardized Vocabularies reflecting the type of source data from which the visit record is derived.';
 COMMENT ON COLUMN VISIT_DETAIL.provider_id IS 'A foreign key to the provider in the provider table who was associated with the visit.';
 COMMENT ON COLUMN VISIT_DETAIL.care_site_id IS 'A foreign key to the care site in the care site table that was visited.';
-COMMENT ON COLUMN VISIT_DETAIL.visit_source_value IS 'The source code for the visit as it appears in the source data.';
-COMMENT ON COLUMN VISIT_DETAIL.visit_source_concept_id IS 'A foreign key to a Concept that refers to the code used in the source.';
-COMMENT ON COLUMN VISIT_DETAIL.admitting_source_value  IS 'The source code for the admitting source as it appears in the source data.';
-COMMENT ON COLUMN VISIT_DETAIL.admitting_concept_id  IS 'A foreign key to the predefined concept in the Place of Service Vocabulary reflecting the admitting source for a visit.';
-COMMENT ON COLUMN VISIT_DETAIL.discharge_to_source_value IS 'The source code for the discharge disposition as it appears in the source data.';
-COMMENT ON COLUMN VISIT_DETAIL.discharge_to_concept_id IS 'A foreign key to the predefined concept in the Place of Service Vocabulary reflecting the discharge disposition for a visit.';
+COMMENT ON COLUMN VISIT_DETAIL.visit_detail_source_value IS 'The source code for the visit as it appears in the source data.';
+COMMENT ON COLUMN VISIT_DETAIL.visit_detail_source_concept_id IS 'A foreign key to a Concept that refers to the code used in the source.';
+COMMENT ON COLUMN VISIT_DETAIL.admitted_from_source_value  IS 'The source code for the admitting source as it appears in the source data.';
+COMMENT ON COLUMN VISIT_DETAIL.admitted_from_concept_id  IS 'A foreign key to the predefined concept in the Place of Service Vocabulary reflecting the admitting source for a visit.';
+COMMENT ON COLUMN VISIT_DETAIL.discharged_to_source_value IS 'The source code for the discharge disposition as it appears in the source data.';
+COMMENT ON COLUMN VISIT_DETAIL.discharged_to_concept_id IS 'A foreign key to the predefined concept in the Place of Service Vocabulary reflecting the discharge disposition for a visit.';
 COMMENT ON COLUMN VISIT_DETAIL.preceding_visit_detail_id  IS 'A foreign key to the VISIT_DETAIL table of the visit immediately preceding this visit';
-COMMENT ON COLUMN VISIT_DETAIL.visit_detail_parent_id  IS 'A foreign key to the VISIT_DETAIL table record to represent the immediate parent visit-detail record.';
+COMMENT ON COLUMN VISIT_DETAIL.parent_visit_detail_id  IS 'A foreign key to the VISIT_DETAIL table record to represent the immediate parent visit-detail record.';
 COMMENT ON COLUMN VISIT_DETAIL.visit_occurrence_id  IS 'A foreign key that refers to the record in the VISIT_OCCURRENCE table. This is a required field, because for every visit_detail is a child of visit_occurrence and cannot exist without a corresponding parent record in visit_occurrence.';
 -- SPECIMEN
 COMMENT ON TABLE SPECIMEN IS '[CLINICAL] The specimen domain contains the records identifying biological samples from a person.';

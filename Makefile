@@ -12,12 +12,14 @@ buildmimic:
 	psql $(MIMIC) -v mimic_data_dir="$(MIMIC_DATA_DIR)"  -f postgres_add_indexes.sql &&\
 	psql $(MIMIC) -v mimic_data_dir="$(MIMIC_DATA_DIR)"  -f analyze.sql
 
+# Comments run after mimic-omop-alter.sql since they also document its extra columns.
 buildomop:
-	psql $(OMOP) -f "omop/build-omop/postgresql/OMOP CDM postgresql ddl.txt" &&\
-	psql $(OMOP) -f omop/build-omop/postgresql/omop_cdm_comments.sql &&\
+	psql $(OMOP) -c "DROP SCHEMA IF EXISTS $(OMOP_SCHEMA) CASCADE; CREATE SCHEMA $(OMOP_SCHEMA);" &&\
+	psql $(OMOP) -f omop/build-omop/postgresql/OMOPCDM_postgresql_5.4_ddl.sql &&\
 	psql $(OMOP) -f omop/build-omop/postgresql/mimic-omop-alter.sql &&\
+	psql $(OMOP) -f omop/build-omop/postgresql/omop_cdm_comments.sql &&\
 	psql $(OMOP) -f omop/build-omop/postgresql/omop_vocab_load.sql &&\
-	psql $(OMOP) -f "omop/build-omop/postgresql/OMOP CDM indexes required - PostgreSQL.sql" &&\
+	psql $(OMOP) -f omop/build-omop/postgresql/OMOPCDM_postgresql_5.4_indices_vocabulary.sql &&\
 	psql $(OMOP) --set=OMOP_SCHEMA="$(OMOP_SCHEMA)" -f "omop/build-omop/postgresql/analyze.sql"
 
 concept:

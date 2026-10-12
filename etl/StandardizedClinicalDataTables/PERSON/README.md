@@ -126,23 +126,23 @@ GROUP BY percentile_25, median, percentile_75;
 SELECT vd.person_id
         , vd.visit_occurrence_id
         , vd.visit_detail_id
-        , vd.visit_start_datetime
+        , vd.visit_detail_start_datetime
         , race.concept_name as race
         , gender.concept_name as gender
-        , date_diff('year', person.birth_datetime, vd.visit_start_datetime) as age
+        , date_diff('year', person.birth_datetime, vd.visit_detail_start_datetime) as age
         , adm.concept_name as admission
         , disch.concept_name as discharge
-        , date_diff('day', vd.visit_start_datetime, vd.visit_end_datetime) as los_icu
+        , date_diff('day', vd.visit_detail_start_datetime, vd.visit_detail_end_datetime) as los_icu
         , date_diff('day', vo.visit_start_datetime, vo.visit_end_datetime) as los_adm
         , diag.adm_diagnosis
         , diag.disch_diagnosis
         , CASE
-                WHEN vd.discharge_to_concept_id = 4216643 then 1
+                WHEN vd.discharged_to_concept_id = 4216643 then 1
                 ELSE 0 END AS dead_icu
 FROM visit_detail vd
 LEFT JOIN visit_occurrence vo USING (visit_occurrence_id)
    LEFT JOIN concept adm ON vo.visit_source_concept_id = adm.concept_id
-   LEFT JOIN concept disch ON vo.discharge_to_concept_id = disch.concept_id
+   LEFT JOIN concept disch ON vo.discharged_to_concept_id = disch.concept_id
 JOIN person ON person.person_id = vd.person_id
    LEFT JOIN concept race ON person.race_concept_id = race.concept_id
    LEFT JOIN concept gender ON person.gender_concept_id = gender.concept_id
@@ -162,6 +162,6 @@ LEFT JOIN
     LEFT JOIN condition_occurrence disch ON co.visit_occurrence_id = disch.visit_occurrence_id and disch.condition_type_concept_id = 38000184
         JOIN concept disch_name ON disch_name.concept_id = disch.condition_concept_id
 ) diag ON diag.visit_occurrence_id = vd.visit_occurrence_id
-WHERE vd.visit_type_concept_id = 2000000006
+WHERE vd.visit_detail_type_concept_id = 2000000006
 AND vd.visit_detail_concept_id = 581382;
 ```

@@ -9,7 +9,8 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=mypassword
     ports:
-      - 5432:5432
+      # Local only: MIMIC data must not be reachable from a public interface.
+      - 127.0.0.1:5432:5432
     volumes:
       - $PWD/docker/postgres.conf:/etc/postgresql/postgresql.conf
 #      - $PWD/db-data/:/var/lib/postgresql/data/
@@ -17,6 +18,10 @@ services:
       test: ["CMD-SHELL", "psql -U postgres -d mimic -c 'select 1' | grep -q column"]
       interval: 5s
     command: postgres -c config_file=/etc/postgresql/postgresql.conf
+    # Without swap, going over the host memory means the OOM killer: cap postgres instead.
+    mem_limit: 24g
+    # Docker's 64MB default /dev/shm breaks parallel query workers.
+    shm_size: 1g
 
   etl:
     build:
